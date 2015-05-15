@@ -1,0 +1,19 @@
+<resources>
+
+    <!-- extend one of the Theme.AppCompat themes -->
+    <style name="Theme.MyTheme" parent="Theme.Base">
+        <!-- customize the color palette -->
+        <!--ActionBar颜色 -->
+        <item name="colorPrimary">@color/material_500</item>
+        <!---标题栏颜色-->
+        <item name="colorPrimaryDark">@color/material_700</item>
+        <item name="colorAccent">@color/material_a200</item>
+        <!-- 标题文字颜色-->
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <!--主背景颜色-->
+        <item name="android:windowBackground">@android:color/white</item>
+        <!--导航条颜色-->
+        <item name="android:navigationBarColor">@color/material_700</item>
+    </style>
+
+</resources>
