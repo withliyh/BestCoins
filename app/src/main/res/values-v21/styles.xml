@@ -14,6 +14,12 @@
         <item name="android:windowBackground">@android:color/white</item>
         <!--导航条颜色-->
         <item name="android:navigationBarColor">@color/material_700</item>
+
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+
+
     </style>
 
 </resources>
