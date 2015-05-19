@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2015/5/18.
  */
-@Table(name = "Check")
+@Table(name = "BillCheck")
 public class Check extends Model {
 
     @Column(name = "Date")

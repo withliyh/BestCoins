@@ -3,16 +3,20 @@ package li.withliyh.bestcoins;
 import android.content.res.Configuration;
 import android.os.PersistableBundle;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerTabStrip;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+
+import java.util.ArrayList;
+
+import li.withliyh.bestcoins.adapter.TabsAdapter;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -20,12 +24,16 @@ public class MainActivity extends ActionBarActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private View mDrawer;
+
+    private ViewPager mViewPager;
+    private PagerTabStrip mPagerTabStrip;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-       // setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -54,6 +62,28 @@ public class MainActivity extends ActionBarActivity {
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+
+        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        mPagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTab);
+
+        mPagerTabStrip.setTabIndicatorColor(getResources().getColor(android.R.color.holo_red_dark));
+        mPagerTabStrip.setDrawFullUnderline(true);
+        mPagerTabStrip.setBackgroundColor(getResources().getColor(android.R.color.white));
+
+        ArrayList<View> viewList = new ArrayList<>();
+        viewList.add(getLayoutInflater().inflate(R.layout.page_check, null));
+        viewList.add(getLayoutInflater().inflate(R.layout.page_check, null));
+        viewList.add(getLayoutInflater().inflate(R.layout.page_check, null));
+
+        ArrayList<String> titleList = new ArrayList<>();
+        titleList.add("Tab1");
+        titleList.add("Tab2");
+        titleList.add("Tab3");
+
+        TabsAdapter checkAdapter = new TabsAdapter(this, mViewPager);
+        checkAdapter.setup(viewList, titleList);
+        mViewPager.setCurrentItem(0);
     }
 
     @Override

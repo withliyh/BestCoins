@@ -16,23 +16,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize" />
+            android:minHeight="?attr/actionBarSize"/>
+
+        <include layout="@layout/layout_viewpager" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/my_awesome_drawer"
         android:layout_width="304dp"
-        android:background="@android:color/holo_red_dark"
+        android:background="@color/material_a500"
         android:layout_height="match_parent"
         android:layout_gravity="left|start"
         android:fitsSystemWindows="true"
         android:orientation="vertical"></LinearLayout>
-    <LinearLayout
-        android:id="@+id/my_awesome_drawer2"
-        android:background="@android:color/holo_red_light"
-        android:layout_width="304dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="right|end"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical"></LinearLayout>
+
 </android.support.v4.widget.DrawerLayout>

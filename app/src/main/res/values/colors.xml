@@ -9,7 +9,9 @@
     <!-- A light Holo shade of orange -->
     <color name="holo_orange_light">#ffffbb33</color>
 
-    <color name="material_500">#9c27b0</color>
-    <color name="material_700">#7b1fa2</color>
-    <color name="material_a200">#ce93d8</color>
+    <color name="material_500">#607D8B</color>
+    <color name="material_700">#607D8B</color>
+    <color name="material_a100">#CFD8DC</color>
+    <color name="material_a200">#ECEFF1</color>
+    <color name="material_a500">#607D8B</color>
 </resources>
