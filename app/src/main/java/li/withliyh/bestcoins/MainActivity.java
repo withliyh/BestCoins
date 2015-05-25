@@ -1,7 +1,14 @@
 package li.withliyh.bestcoins;
 
+import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Handler;
 import android.os.PersistableBundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
@@ -9,44 +16,61 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
+
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.viewpagerindicator.TitlePageIndicator;
 import java.util.ArrayList;
 
 import li.withliyh.bestcoins.adapter.TabsAdapter;
+import li.withliyh.bestcoins.animate.ColorAnimationDrawable;
+import li.withliyh.bestcoins.fragment.main.HomeFragment;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
+    private Toolbar mToolbar;
+    private ViewPager mViewPager;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private View mDrawer;
+    private LinearLayout mDrawer;
 
-    private ViewPager mViewPager;
-    private PagerTabStrip mPagerTabStrip;
+    private TitlePageIndicator mTitleIndicator;
+
+
+    private final Handler mHandler = new Handler();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        setSupportActionBar(toolbar);
+
+        initToolbar();
+        initDrawerMenu();
+        initPageIndicator();
+    }
+
+    private void initToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        //getSupportActionBar().setDisplayShowTitleEnabled(true);
+    }
 
-        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
-        mDrawer = findViewById(R.id.my_awesome_drawer);
+
+    private void initDrawerMenu() {
+        mDrawer = (LinearLayout)findViewById(R.id.my_awesome_drawer);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.my_drawer_layout);
-        //mDrawerLayout.setStatusBarBackgroundColor();
-        //mDrawerLayout.openDrawer(drawer);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
                 R.string.drawer_open,R.string.drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -60,30 +84,50 @@ public class MainActivity extends ActionBarActivity {
                 invalidateOptionsMenu();
             }
         };
-
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        TextView menuTitle = new TextView(this);
+        menuTitle.setText("Menu");
 
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        mPagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerTab);
+        mDrawer.addView(menuTitle);
+    }
 
-        mPagerTabStrip.setTabIndicatorColor(getResources().getColor(android.R.color.holo_red_dark));
-        mPagerTabStrip.setDrawFullUnderline(true);
-        mPagerTabStrip.setBackgroundColor(getResources().getColor(android.R.color.white));
 
-        ArrayList<View> viewList = new ArrayList<>();
-        viewList.add(getLayoutInflater().inflate(R.layout.page_check, null));
-        viewList.add(getLayoutInflater().inflate(R.layout.page_check, null));
-        viewList.add(getLayoutInflater().inflate(R.layout.page_check, null));
+    private void initPageIndicator() {
+        mViewPager = (ViewPager)findViewById(R.id.viewPager);
+        TabsAdapter adapter = new TabsAdapter(this, getSupportFragmentManager());
+        Bundle args1 = new Bundle();
+        args1.putString("key", "a");
 
-        ArrayList<String> titleList = new ArrayList<>();
-        titleList.add("Tab1");
-        titleList.add("Tab2");
-        titleList.add("Tab3");
+        Bundle args2 = new Bundle();
+        args2.putString("key", "b");
 
-        TabsAdapter checkAdapter = new TabsAdapter(this, mViewPager);
-        checkAdapter.setup(viewList, titleList);
-        mViewPager.setCurrentItem(0);
+        Bundle args3 = new Bundle();
+        args3.putString("key", "c");
+
+        Bundle args4 = new Bundle();
+        args4.putString("key", "d");
+
+        adapter.addTab(HomeFragment.class, args1);
+        adapter.addTab(HomeFragment.class, args2);
+        adapter.addTab(HomeFragment.class, args3);
+        adapter.addTab(HomeFragment.class, args4);
+        mViewPager.setAdapter(adapter);
+
+
+        mTitleIndicator = (TitlePageIndicator)findViewById(R.id.pageTitle);
+        mTitleIndicator.setViewPager(mViewPager);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -125,5 +169,72 @@ public class MainActivity extends ActionBarActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    private Drawable.Callback mDrawableCallback = new Drawable.Callback() {
+        @Override
+        public void invalidateDrawable(Drawable who) {
+            getActionBar().setBackgroundDrawable(who);
+        }
+
+        @Override
+        public void scheduleDrawable(Drawable who, Runnable what, long when) {
+            mHandler.postAtTime(what, when);
+        }
+
+        @Override
+        public void unscheduleDrawable(Drawable who, Runnable what) {
+            mHandler.removeCallbacks(null);
+        }
+    };
+
+    public static class TabsAdapter extends FragmentPagerAdapter {
+        private Context mContext;
+        private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+
+
+        static final class TabInfo {
+            private final Class<?> clss;
+            private final Bundle args;
+
+            TabInfo(Class<?> _clss, Bundle _args) {
+                clss = _clss;
+                args = _args;
+            }
+        }
+
+        public TabsAdapter(Context context, FragmentManager fm) {
+            super(fm);
+            mContext = context;
+        }
+
+        public void addTab(Class<?> clss, Bundle args) {
+            TabInfo info = new TabInfo(clss, args);
+            mTabs.add(info);
+            notifyDataSetChanged();
+        }
+
+        /**
+         * Return the Fragment associated with a specified position.
+         *
+         * @param position
+         */
+        @Override
+        public Fragment getItem(int position) {
+            TabInfo info = mTabs.get(position);
+            return Fragment.instantiate(mContext, info.clss.getName(), info.args);
+        }
+
+
+
+
+
+        /**
+         * Return the number of views available.
+         */
+        @Override
+        public int getCount() {
+            return mTabs.size();
+        }
     }
 }
